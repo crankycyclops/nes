@@ -17,19 +17,11 @@
 	stx APUSTATUS   ; APUSTATUS = 0
 
 	ppuwarmup
+	zeroram
 
-	;; Zero ram.
-	txa
-:	sta $000, x
-	sta $100, x
-	sta $200, x
-	sta $300, x
-	sta $400, x
-	sta $500, x
-	sta $600, x
-	sta $700, x
-	inx
-	bne :-
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;; Game code begins here ;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	;; Play audio forever.
 	lda #$01		; enable pulse 1
@@ -40,8 +32,10 @@
 	sta $4003
 	lda #$bf		; volume
 	sta $4000
+
 forever:
 	jmp forever
+
 .endproc
 
 ;;; ----------------------------------------------------------------------------
