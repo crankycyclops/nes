@@ -1,5 +1,5 @@
 objs := header.o main.o
-out := ctnes.nes
+out := template.nes
 
 all: $(out)
 
@@ -18,5 +18,5 @@ header.o: header.s
 
 # Link
 
-ctnes.nes: link.x $(objs)
+template.nes: link.x $(objs)
 	ld65 -C link.x $(objs) -o $@

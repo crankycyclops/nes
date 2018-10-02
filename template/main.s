@@ -6,21 +6,17 @@
 ;;; Reset handler
 
 .proc reset
-	sei			; Disable interrupts
-	cld			; Clear decimal mode
-	ldx #$ff
-	txs			; Initialize SP = $FF
-	inx
-	stx PPUCTRL		; PPUCTRL = 0
-	stx PPUMASK		; PPUMASK = 0
-	stx APUSTATUS		; APUSTATUS = 0
 
-	;; PPU warmup, wait two frames, plus a third later.
-	;; http://forums.nesdev.com/viewtopic.php?f=2&t=3958
-:	bit PPUSTATUS
-	bpl :-
-:	bit PPUSTATUS
-	bpl :-
+	sei             ; Disable interrupts
+	cld             ; Clear decimal mode
+	ldx #$ff
+	txs             ; Initialize SP = $FF
+	inx
+	stx PPUCTRL     ; PPUCTRL = 0 (see: https://wiki.nesdev.com/w/index.php/PPU_registers#PPUCTRL)
+	stx PPUMASK     ; PPUMASK = 0
+	stx APUSTATUS   ; APUSTATUS = 0
+
+	ppuwarmup
 
 	;; Zero ram.
 	txa
@@ -34,10 +30,6 @@
 	sta $700, x
 	inx
 	bne :-
-
-	;; Final wait for PPU warmup.
-:	bit PPUSTATUS
-	bpl :-
 
 	;; Play audio forever.
 	lda #$01		; enable pulse 1
