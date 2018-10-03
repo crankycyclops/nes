@@ -17,6 +17,8 @@ PPUDATA     = $2007
 
 ; See: https://safiire.github.io/blog/2015/03/29/creating-sound-on-the-nes/
 
+APU_STATUS               = $4015
+
 APU_PULSE1_CONTROL       = $4000
 
 ; Value: DDLC VVVV
@@ -49,7 +51,6 @@ APU_PULSE1_CT            = $4003
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 OAMDMA      = $4014
-APUSTATUS   = $4015
 JOYPAD1     = $4016
 JOYPAD2     = $4017
 
