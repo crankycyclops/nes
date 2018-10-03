@@ -1,24 +1,57 @@
-;;;;;;;;;;;;;;;;;;;;;;
-;;; PPU registers. ;;;
-;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;; PPU registers ;;;
+;;;;;;;;;;;;;;;;;;;;;
 
-PPUCTRL		= $2000
-PPUMASK		= $2001
-PPUSTATUS	= $2002
-OAMADDR		= $2003
-OAMDATA		= $2004
-PPUSCROLL	= $2005
-PPUADDR		= $2006
-PPUDATA		= $2007
+PPUCTRL     = $2000
+PPUMASK     = $2001
+PPUSTATUS   = $2002
+OAMADDR     = $2003
+OAMDATA     = $2004
+PPUSCROLL   = $2005
+PPUADDR     = $2006
+PPUDATA     = $2007
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Other IO registers. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;; APU registers ;;;
+;;;;;;;;;;;;;;;;;;;;;
 
-OAMDMA		= $4014
-APUSTATUS	= $4015
-JOYPAD1		= $4016
-JOYPAD2		= $4017
+; See: https://safiire.github.io/blog/2015/03/29/creating-sound-on-the-nes/
+
+APU_PULSE1_CONTROL       = $4000
+
+; Value: DDLC VVVV
+; D: Duty cycle of the pulse wave 00 = 12.5% 01 = 25% 10 = 50% 11 = 75%
+; L: Length Counter Halt
+; C: Constant Volume
+; V: 4-bit volume
+
+APU_PULSE1_RAMP_CONTROL  = $4001
+
+; Value: EPPP NSSS
+; E: Enabled flag
+; P: Sweep Divider Period
+; N: Negate flag, inverts the sweep envelope
+; S: Shift count
+
+APU_PULSE1_FT            = $4002
+
+; Value: TTTT TTTT
+; T: Low 8 bits of the timer that controls the frequency
+
+APU_PULSE1_CT            = $4003
+
+; Value: LLLL LTTT
+; L: Length counter, if Length Counter Halt is 0, timer for note length
+; T: High 3 bits of timer that controls frequency
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Other IO registers ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+OAMDMA      = $4014
+APUSTATUS   = $4015
+JOYPAD1     = $4016
+JOYPAD2     = $4017
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; Useful macros ;;;
