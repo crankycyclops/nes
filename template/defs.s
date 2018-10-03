@@ -2,14 +2,15 @@
 ;;; PPU registers ;;;
 ;;;;;;;;;;;;;;;;;;;;;
 
-PPUCTRL     = $2000
-PPUMASK     = $2001
-PPUSTATUS   = $2002
-OAMADDR     = $2003
-OAMDATA     = $2004
-PPUSCROLL   = $2005
-PPUADDR     = $2006
-PPUDATA     = $2007
+PPU_CTRL     = $2000
+PPU_MASK     = $2001
+PPU_STATUS   = $2002
+PPU_SCROLL   = $2005
+PPU_ADDR     = $2006
+PPU_DATA     = $2007
+
+OAM_ADDR     = $2003
+OAM_DATA     = $2004
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; APU registers ;;;
@@ -50,9 +51,9 @@ APU_PULSE1_CT            = $4003
 ;;; Other IO registers ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-OAMDMA      = $4014
-JOYPAD1     = $4016
-JOYPAD2     = $4017
+OAM_DMA          = $4014
+CONTROLLER_1     = $4016
+CONTROLLER_2     = $4017
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; Useful macros ;;;
@@ -63,13 +64,13 @@ JOYPAD2     = $4017
 .macro ppuwarmup
 
 :
-	bit PPUSTATUS
+	bit PPU_STATUS
 	bpl :-
 :
-	bit PPUSTATUS
+	bit PPU_STATUS
 	bpl :-
 :
-	bit PPUSTATUS
+	bit PPU_STATUS
 	bpl :-
 
 .endmacro
