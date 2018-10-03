@@ -56,8 +56,9 @@ JOYPAD2		= $4017
 	sta $600, x
 	sta $700, x
 
-	; The $200s are shadow sprite OAM and should be set to $ff
-	lda #$ff
+	; The $200s are shadow sprite OAM and should be set to $fe
+	; See: https://safiire.github.io/blog/2015/03/29/creating-sound-on-the-nes/
+	lda #$fe
 	sta $200, x
 
 	inx
