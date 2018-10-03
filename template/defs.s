@@ -50,12 +50,16 @@ JOYPAD2		= $4017
 
 :	sta $000, x
 	sta $100, x
-	sta $200, x     ; TODO: should I not blank this range, since it's the OAM display list?
 	sta $300, x
 	sta $400, x
 	sta $500, x
 	sta $600, x
 	sta $700, x
+
+	; The $200s are shadow sprite OAM and should be set to $ff
+	lda #$ff
+	sta $200, x
+
 	inx
 
 	; This works because the inx instruction will always result in a Z (zero)
