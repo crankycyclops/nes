@@ -16,6 +16,7 @@
 	stx PPUMASK     ; PPUMASK = 0
 	stx APUSTATUS   ; APUSTATUS = 0
 
+	zeroapu
 	ppuwarmup
 	zeroram
 
