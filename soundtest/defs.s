@@ -126,6 +126,7 @@ BUTTON_RIGHT    = 1 << 0
 	lda #$fe
 	sta $200, x
 
+	lda #$00
 	inx
 
 	; This works because the inx instruction will always result in a Z (zero)
