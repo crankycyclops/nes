@@ -17,6 +17,8 @@ OAM_DATA     = $2004
 ;;;;;;;;;;;;;;;;;;;;;
 
 ; See: https://safiire.github.io/blog/2015/03/29/creating-sound-on-the-nes/
+; And: https://wiki.nesdev.com/w/index.php/APU_basics#Register_initialization
+; And: https://wiki.nesdev.com/w/index.php/APU_Triangle
 
 APU_STATUS               = $4015
 
@@ -46,6 +48,8 @@ APU_PULSE1_CT            = $4003
 ; Value: LLLL LTTT
 ; L: Length counter, if Length Counter Halt is 0, timer for note length
 ; T: High 3 bits of timer that controls frequency
+
+APU_TRIANGLE_LINEAR_COUNTER = $4008
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Other IO registers ;;;

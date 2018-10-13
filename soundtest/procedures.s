@@ -1,3 +1,66 @@
+;; Execute 256 x 256 (65536) NOP instructions at 2 clock cycles each, for a total
+;; delay of 131072 clock cycles.
+.proc delay_65knops
+
+	; save previous values of X and Y so we can restore them later
+	txa
+	pha
+	tya
+	pha
+
+	ldx #$ff
+
+loop_x:
+
+	ldy #$ff
+
+loop_y:
+
+	nop
+	dey
+	bne loop_y
+
+	dex
+	bne loop_x
+
+	pla
+	tay
+	pla
+	tax
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: I'm getting a time a little greater than 1 second, so there's a mistake
+;; I need to fix here. I'll probably talk to people on NES forums about it.
+;;
+;; On an NTSC CPU (1.79MHz), this equals a delay of about 0.0732 seconds, while
+;; on a PAL CPU (1.66MHz), this equals a delay of about 0.0790 seconds. There's
+;; likely a more intelligent way to handle delays, but this simple function will
+;; serve my sound test purposes.
+.proc delay_half_second_ntsc
+
+	txa
+	pha
+
+	ldx #$03
+
+:	jsr delay_65knops
+	dex
+	bne :-
+
+	pla
+	tax
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Zero APU registers
 ;; Copied from: https://safiire.github.io/blog/2015/03/29/creating-sound-on-the-nes/
 ;; I'm not sure which function I should call, this, or init_apu (below) from

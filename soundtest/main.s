@@ -37,17 +37,57 @@ sta buttons
 	;;; Game code begins here ;;;
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	;; Play audio forever.
-	lda #$01		; enable pulse 1
-	sta APU_STATUS
-	lda #$08		; period
-	sta APU_PULSE1_FT
-	lda #$02
-	sta APU_PULSE1_CT
-	lda #$bf		; volume
+forever:
+
+	lda #%00011111
 	sta APU_PULSE1_CONTROL
 
-forever:
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%01011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%10011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%11011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
 	jmp forever
 
 .endproc
