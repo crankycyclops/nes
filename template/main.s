@@ -25,14 +25,14 @@
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	;; Play audio forever.
+	lda #%10111111  ; volume
+	sta APU_PULSE1_CONTROL
 	lda #%00000001  ; enable pulse 1
 	sta APU_STATUS
-	lda #%00001000  ; period
+	lda #%00000000  ; sweep & period
 	sta APU_PULSE1_FT
 	lda #%00000010
 	sta APU_PULSE1_CT
-	lda #%10111111  ; volume
-	sta APU_PULSE1_CONTROL
 
 forever:
 	jmp forever
