@@ -80,7 +80,7 @@ BUTTON_RIGHT    = 1 << 0
 
 :
 	bit PPU_STATUS
-	bpl :-
+	bpl :- ; this branches as long as bit 7 in PPU_STATUS is 0
 :
 	bit PPU_STATUS
 	bpl :-
