@@ -25,13 +25,13 @@
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	;; Play audio forever.
-	lda #$01		; enable pulse 1
+	lda #%00000001  ; enable pulse 1
 	sta APU_STATUS
-	lda #$08		; period
+	lda #%00001000  ; period
 	sta APU_PULSE1_FT
-	lda #$02
+	lda #%00000010
 	sta APU_PULSE1_CT
-	lda #$bf		; volume
+	lda #%10111111  ; volume
 	sta APU_PULSE1_CONTROL
 
 forever:
