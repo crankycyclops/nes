@@ -1,8 +1,68 @@
+;; Plays a short pulse in the key of A (NTSC timing) with each of the four
+;; possible duty cycles.
+.proc play_pulse_A_ntsc
+
+	lda #%00011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%01011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%10011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	jsr delay_half_second_ntsc
+
+
+	lda #%11011111
+	sta APU_PULSE1_CONTROL
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Execute 256 x 256 (65536) NOP instructions at 2 clock cycles each, for a total
 ;; delay of 131072 clock cycles.
 .proc delay_65knops
 
-	; save previous values of X and Y so we can restore them later
+	; save previous values of A, X and Y so we can restore them later
+	pha
 	txa
 	pha
 	tya
@@ -27,6 +87,7 @@ loop_y:
 	tay
 	pla
 	tax
+	pla
 
 	rts
 
@@ -34,19 +95,13 @@ loop_y:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; TODO: I'm getting a time a little greater than 1 second, so there's a mistake
-;; I need to fix here. I'll probably talk to people on NES forums about it.
-;;
-;; On an NTSC CPU (1.79MHz), this equals a delay of about 0.0732 seconds, while
-;; on a PAL CPU (1.66MHz), this equals a delay of about 0.0790 seconds. There's
-;; likely a more intelligent way to handle delays, but this simple function will
-;; serve my sound test purposes.
 .proc delay_half_second_ntsc
 
+	pha
 	txa
 	pha
 
-	ldx #$03
+	ldx #$02
 
 :	jsr delay_65knops
 	dex
@@ -54,6 +109,38 @@ loop_y:
 
 	pla
 	tax
+	pla
+
+	rts
+
+.endproc
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; TODO: The multiplier of 4 (line 51) should give me something closer to a
+;; half second, and the numbers I quote below are obviously wrong. I need to go
+;; to the forums and figure out why my math is off.
+;;
+;; On an NTSC CPU (1.79MHz), this equals a delay of about 0.0732 seconds, while
+;; on a PAL CPU (1.66MHz), this equals a delay of about 0.0790 seconds. There's
+;; likely a more intelligent way to handle delays, but this simple function will
+;; serve my sound test purposes.
+.proc delay_one_second_ntsc
+
+	pha
+	txa
+	pha
+
+	ldx #$04
+
+:	jsr delay_65knops
+	dex
+	bne :-
+
+	pla
+	tax
+	pla
 
 	rts
 

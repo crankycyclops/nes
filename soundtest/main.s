@@ -39,54 +39,8 @@ sta buttons
 
 forever:
 
-	lda #%00011111
-	sta APU_PULSE1_CONTROL
-
-	lda #%11111011
-	sta APU_PULSE1_FT
-
-	lda #%11111001
-	sta APU_PULSE1_CT
-
-
-	jsr delay_half_second_ntsc
-
-
-	lda #%01011111
-	sta APU_PULSE1_CONTROL
-
-	lda #%11111011
-	sta APU_PULSE1_FT
-
-	lda #%11111001
-	sta APU_PULSE1_CT
-
-
-	jsr delay_half_second_ntsc
-
-
-	lda #%10011111
-	sta APU_PULSE1_CONTROL
-
-	lda #%11111011
-	sta APU_PULSE1_FT
-
-	lda #%11111001
-	sta APU_PULSE1_CT
-
-
-	jsr delay_half_second_ntsc
-
-
-	lda #%11011111
-	sta APU_PULSE1_CONTROL
-
-	lda #%11111011
-	sta APU_PULSE1_FT
-
-	lda #%11111001
-	sta APU_PULSE1_CT
-
+	jsr play_pulse_A_ntsc
+	jsr delay_one_second_ntsc
 
 	jmp forever
 
