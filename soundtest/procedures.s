@@ -90,10 +90,10 @@
 
 	jsr delay_half_second_ntsc
 
-	; Too bad there's no ina instruction...
-	tax
-	inx
-	txa
+	; Too bad there's no ina instruction, amiright? Other tutorials I've seen
+	; suggest you do tax, inx, then txa, but this amounts to 6 clock cycles,
+	; while the adc instruction only ammounts to 2.
+	adc #$01
 
 	cmp #%00010000
 	bne :-
@@ -151,19 +151,6 @@
 	lda #DDLCVVVV
 	sta APU_PULSE1_CONTROL
 
-	ldx #$03
-	lda periodTableLo, X
-	sta APU_PULSE1_FT
-
-	lda periodTableHi, X
-	ora #LLLLL
-	sta APU_PULSE1_CT
-
-	jsr delay_half_second_ntsc
-
-	lda #DDLCVVVV
-	sta APU_PULSE1_CONTROL
-
 	ldx #$04
 	lda periodTableLo, X
 	sta APU_PULSE1_FT
@@ -177,7 +164,7 @@
 	lda #DDLCVVVV
 	sta APU_PULSE1_CONTROL
 
-	ldx #$06
+	ldx #$05
 	lda periodTableLo, X
 	sta APU_PULSE1_FT
 
@@ -190,7 +177,7 @@
 	lda #DDLCVVVV
 	sta APU_PULSE1_CONTROL
 
-	ldx #$08
+	ldx #$07
 	lda periodTableLo, X
 	sta APU_PULSE1_FT
 
@@ -203,7 +190,7 @@
 	lda #DDLCVVVV
 	sta APU_PULSE1_CONTROL
 
-	ldx #$0a
+	ldx #$09
 	lda periodTableLo, X
 	sta APU_PULSE1_FT
 
@@ -217,6 +204,19 @@
 	sta APU_PULSE1_CONTROL
 
 	ldx #$0b
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$0c
 	lda periodTableLo, X
 	sta APU_PULSE1_FT
 

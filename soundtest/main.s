@@ -66,8 +66,9 @@ periodTableHi:
 ; These offsets correspond to indexes into periodTableLo and periodTableHi which
 ; will produce the notes A-G. To go up one or more octaves, add multiples of 12
 ; ($0c) to each value.
+; TODO: these values aren't right yet...
 periodTableOffsetsAToG:
-	.byte $00, $02, $03, $04, $06, $08, $0a, $0b
+	.byte $00, $02, $04, $05, $07, $09, $0b
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NMI (vertical blank) handler
