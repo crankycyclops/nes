@@ -1,6 +1,8 @@
 ;; Plays a short pulse in the key of A (NTSC timing) with each of the four
 ;; possible duty cycles.
-.proc play_pulse_A_ntsc
+.proc play_pulse_A_duty_ntsc
+
+	pha
 
 	lda #%00011111
 	sta APU_PULSE1_CONTROL
@@ -50,6 +52,55 @@
 	lda #%11111001
 	sta APU_PULSE1_CT
 
+	pla
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Plays a short pulse in the key of A (NTSC timing) with all possible volume
+;; values (0-15)
+.proc play_pulse_A_volume_ntsc
+
+	; Duty (D), envelope loop / length counter halt (L), constant volume (C)
+	DDLC = %00010000
+
+	pha
+	txa
+	pha
+
+	lda #0
+
+	; add in the non-volume bits long enough to update the pulse register, then
+	; remove them again so we can continue the loop
+:	ora #DDLC
+	sta APU_PULSE1_CONTROL
+	and #$0f
+
+	pha
+
+	lda #%11111011
+	sta APU_PULSE1_FT
+
+	lda #%11111001
+	sta APU_PULSE1_CT
+
+	pla
+
+	jsr delay_half_second_ntsc
+
+	; increment A (there's no ina instruction, because reasons)
+	tax
+	inx
+	txa
+
+	cmp #%00010000
+	bne :-
+
+	pla
+	tax
+	pla
 
 	rts
 

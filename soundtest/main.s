@@ -39,7 +39,9 @@ sta buttons
 
 forever:
 
-	jsr play_pulse_A_ntsc
+	jsr play_pulse_A_duty_ntsc
+	jsr delay_one_second_ntsc
+	jsr play_pulse_A_volume_ntsc
 	jsr delay_one_second_ntsc
 
 	jmp forever
