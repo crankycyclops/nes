@@ -90,13 +90,139 @@
 
 	jsr delay_half_second_ntsc
 
-	; increment A (there's no ina instruction, because reasons)
+	; Too bad there's no ina instruction...
 	tax
 	inx
 	txa
 
 	cmp #%00010000
 	bne :-
+
+	pla
+	tax
+	pla
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Plays the piano scales through Pulse 1 (NTSC timing)
+;; TODO: hardcoding these values was just for the sake of making it work quickly.
+;; I need to refactor this so that I loop through the offsets in
+;; periodTableOffsetsAToG (defined in main.s) to produce notes A-G.
+.proc play_pulse_scales_ntsc
+
+	pha
+	txa
+	pha
+
+	; Duty (D), envelope loop / length counter halt (L), constant volume (C), volume (v)
+	DDLCVVVV = %00011111
+	LLLLL = %11111000
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$00
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$02
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$03
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$04
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$06
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$08
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$0a
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
+
+	jsr delay_half_second_ntsc
+
+	lda #DDLCVVVV
+	sta APU_PULSE1_CONTROL
+
+	ldx #$0b
+	lda periodTableLo, X
+	sta APU_PULSE1_FT
+
+	lda periodTableHi, X
+	ora #LLLLL
+	sta APU_PULSE1_CT
 
 	pla
 	tax
@@ -247,34 +373,6 @@ regs:
 	.byte $80, $00, $00, $00
 	.byte $30, $00, $00, $00
 	.byte $00, $00, $00, $00
-
-.endproc
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-; Shamelessly stolen from: https://wiki.nesdev.com/w/index.php/Controller_Reading
-; Note: this only reads the first controller.
-.proc read_controller
-
-	lda #$01
-
-	; While the strobe bit is set, buttons will be continuously reloaded.
-	; This means that reading from JOYPAD1 will only return the state of the
-	; first button: button A.
-	sta CONTROLLER_1
-	sta buttons
-	lsr a        ; now A is 0
-
-	; By storing 0 into JOYPAD1, the strobe bit is cleared and the reloading stops.
-	; This allows all 8 buttons (newly reloaded) to be read from JOYPAD1.
-	sta CONTROLLER_1
-
-loop:
-	lda CONTROLLER_1
-	lsr a	       ; bit0  -> Carry
-	rol buttons    ; Carry -> bit0; bit 7 -> Carry
-	bcc loop
-	rts
 
 .endproc
 
