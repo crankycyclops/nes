@@ -16,7 +16,8 @@
 	stx PPU_MASK    ; PPU_MASK = 0
 	stx APU_STATUS  ; APUSTATUS = 0
 
-	zeroapu
+	; jsr zeroapu
+	jsr init_apu
 	ppuwarmup
 	zeroram
 
@@ -38,6 +39,9 @@ forever:
 	jmp forever
 
 .endproc
+
+; include library procedures
+.include "procedures.s"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NMI (vertical blank) handler

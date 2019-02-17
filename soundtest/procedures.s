@@ -92,7 +92,7 @@
 
 	; Too bad there's no ina instruction, amiright? Other tutorials I've seen
 	; suggest you do tax, inx, then txa, but this amounts to 6 clock cycles,
-	; while the adc instruction only ammounts to 2.
+	; while the adc instruction only amounts to 2.
 	adc #$01
 
 	cmp #%00010000
