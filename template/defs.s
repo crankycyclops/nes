@@ -1,3 +1,23 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PPU Color Palette ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; All PPU palette addresses have $3f as their MSB
+PALETTE_ADDR_MSB = $3f
+
+; PPU address to set the universal background color is $3f00.
+PALETTE_UNIVERSAL_BG_ADDR_LSB = $00
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PPU Attribute Table ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ATTRIBUTE_TABLE_0_ADDR_MSB = $23
+ATTRIBUTE_TABLE_1_ADDR_MSB = $27
+ATTRIBUTE_TABLE_2_ADDR_MSB = $2b
+ATTRIBUTE_TABLE_3_ADDR_MSB = $2f
+ATTRIBUTE_TABLE_ADDR_LSB = $C0 ; LSB is the same for all attribute tables
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;;; PPU registers ;;;
 ;;;;;;;;;;;;;;;;;;;;;
