@@ -74,6 +74,19 @@ BUTTON_RIGHT    = 1 << 0
 ;;; Useful macros ;;;
 ;;;;;;;;;;;;;;;;;;;;;
 
+;; Initialize CPU
+.macro init_cpu
+
+	sei             ; Disable interrupts
+	cld             ; Clear decimal mode
+	ldx #$ff
+	txs             ; Initialize SP = $FF
+	inx
+
+.endmacro
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; PPU warmup: wait three frames.
 ;; See: http://forums.nesdev.com/viewtopic.php?f=2&t=3958
 .macro ppuwarmup

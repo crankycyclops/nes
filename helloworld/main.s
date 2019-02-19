@@ -1,10 +1,9 @@
-; A simple NES game that prints "Hello, World!" to the screen. I mostly followed
-; along with this link:
+; A simple NES ROM that prints "Hello, World!" to the screen. I mostly followed
+; along with this link (though their code is written in C):
 ; https://timcheeseman.com/nesdev/2016/01/18/hello-world-part-one.html
 ;
 ; Also, here's another really good article about Nintendo graphics, which was
-; helpful for this and which I'll also definitely make more use of for other
-; projects:
+; helpful for this and which I'll also definitely refer to for other projects:
 ; http://www.dustmop.io/blog/2015/04/28/nes-graphics-part-1/
 
 .include "defs.s"
@@ -75,8 +74,7 @@
 	; I would LOVE to be able to do something like "lda (hellostr, X)", but this
 	; won't work because indirect addressing only works for base addresses that
 	; are one byte or less, and the address of hellostr is 2 bytes. So, instead,
-	; I've decided to be a bit clever and store the memory location of hellostr
-	; in the zero page, then increment that value (basically a pointer.)
+	; I'm using a 16-bit pointer in the zero page that references hellostr.
 	ldx #<hellostr ; LSB
 	ldy #>hellostr ; MSB
 	stx $00 ; addresses are little-endian and have the LSB at the front

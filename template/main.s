@@ -7,11 +7,8 @@
 
 .proc reset
 
-	sei             ; Disable interrupts
-	cld             ; Clear decimal mode
-	ldx #$ff
-	txs             ; Initialize SP = $FF
-	inx
+	init_cpu
+
 	stx PPU_CTRL    ; PPU_CTRL = 0 (see: https://wiki.nesdev.com/w/index.php/PPU_registers#PPUCTRL)
 	stx PPU_MASK    ; PPU_MASK = 0
 	stx APU_STATUS  ; APUSTATUS = 0
