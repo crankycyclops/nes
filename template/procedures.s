@@ -138,5 +138,7 @@ endpaletteloop:
 	tax
 	pla
 
+	rts
+
 .endproc
 
