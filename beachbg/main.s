@@ -82,10 +82,12 @@ attributes:
 
 ; Beach themed palettes
 palettes:
-	.byte $0f, $00, $10, $30
-	.byte $0f, $01, $21, $31
-	.byte $0f, $17, $19, $2a
-	.byte $0f, $08, $28, $38
+	.incbin "data/beach.pal"
+;palettes:
+;	.byte $0f, $00, $10, $30
+;	.byte $0f, $01, $21, $31
+;	.byte $0f, $17, $19, $2a
+;	.byte $0f, $08, $28, $38
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; NMI (vertical blank) handler
