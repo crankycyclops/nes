@@ -25,29 +25,25 @@
 
 	ldx #<palettes ; LSB
 	ldy #>palettes ; MSB
-	jsr setup_palettes
+	jsr load_palettes
 
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	;;; TODO: example of setting palette values in attributes table ;;;
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-	ldx #ATTRIBUTE_TABLE_0_ADDR_MSB
-	stx PPU_ADDR
-	ldx #ATTRIBUTE_TABLE_ADDR_LSB
-	stx PPU_ADDR
-
-	; bottomright, bottomleft, topright, topleft
-	lda #(0 << 6) | (1 << 4) | (2 << 2) | (3 << 0)
-	sta PPU_DATA
-
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;
-	;;; Setup the nametable ;;;
-	;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;;;;;;;;;;;;;;;;;;;;;;
+	;;; Setup Nametable ;;;
+	;;;;;;;;;;;;;;;;;;;;;;;
 
 	ldx #<nametable ; LSB
 	ldy #>nametable ; MSB
 	lda #0 ; we're loading nametable 0
 	jsr load_nametable
+
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;;; Setup Attribute Table ;;;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+	ldx #<attributes ; LSB
+	ldy #>attributes ; MSB
+	lda #0 ; we're loading the attributes for nametable 0
+	jsr load_attribute_table
 
 	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	;;; Tell the PPU to display a picture ;;;
@@ -79,6 +75,10 @@ forever:
 ; Beach scene nametable
 nametable:
 	.incbin "data/beach.nam"
+
+; Beach scene attributes
+attributes:
+	.incbin "data/beach.atr"
 
 ; Beach themed palettes
 palettes:

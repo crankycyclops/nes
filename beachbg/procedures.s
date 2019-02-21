@@ -57,6 +57,10 @@ regs:
 ;; want to replace this procedure with one that can load compressed data.
 .proc load_nametable
 
+	; ZP address containing an array (lookup table) of PPU nametable base
+	; addresses (for nametables 0-3)
+	NAMETABLE_BASE_PPU_ADDRESSES = $00
+
 	; ZP address containing 16-bit pointer to nametable data (little-endian)
 	NAMETABLE_DATA_ADDR = $04
 
@@ -77,20 +81,20 @@ regs:
 
 	; Lookup table that we'll use to select the MSB of the starting PPU address
 	; for the selected nametable
-	ldx #$20
-	stx $00
-	ldx #$24
-	stx $01
-	ldx #$28
-	stx $02
-	ldx #$2c
-	stx $03
+	ldx #NAMETABLE_0_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES
+	ldx #NAMETABLE_1_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 1
+	ldx #NAMETABLE_2_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 2
+	ldx #NAMETABLE_3_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 3
 
 	; Prime the PPU to start receiving data for the chosen nametable
 	ldy NAMETABLE_SELECTED
-	ldx $00, Y
+	ldx NAMETABLE_BASE_PPU_ADDRESSES, Y
 	stx PPU_ADDR
-	ldx #0
+	ldx #NAMETABLE_ADDR_LSB
 	stx PPU_ADDR
 
 	; The nametable's data is 4 * 240($f0) = 960 bytes. This number is too large for
@@ -150,11 +154,78 @@ endOuterNametableLoadLoop:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Loads the attribute table for the specified nametable. Takes as input the
+;; attribute table's 16-bit address (LSB in X and MSB in Y), along with the
+;; associated nametable (0-3), stored in A.
+.proc load_attribute_table
+
+	; ZP address containing an array (lookup table) of PPU attribute table base
+	; addresses (for nametables 0-3)
+	ATTR_TABLE_BASE_PPU_ADDRESSES = $00
+
+	; ZP address containing 16-bit pointer to attribute table data (little-endian)
+	ATTR_DATA_ADDR = $04
+
+	; ZP address containing the selected nametable we want to load the 
+	; attribute table data for (0-3)
+	NAMETABLE_SELECTED = $06
+
+	sta NAMETABLE_SELECTED
+
+	pha
+	txa
+	pha
+	tya
+	pha
+
+	; Lookup table that we'll use to select the MSB of the starting PPU address
+	; for the selected nametable
+	ldx #ATTRIBUTE_TABLE_0_ADDR_MSB
+	stx ATTR_TABLE_BASE_PPU_ADDRESSES
+	ldx #ATTRIBUTE_TABLE_1_ADDR_MSB
+	stx ATTR_TABLE_BASE_PPU_ADDRESSES + 1
+	ldx #ATTRIBUTE_TABLE_2_ADDR_MSB
+	stx ATTR_TABLE_BASE_PPU_ADDRESSES + 2
+	ldx #ATTRIBUTE_TABLE_3_ADDR_MSB
+	stx ATTR_TABLE_BASE_PPU_ADDRESSES + 3
+
+	; Prime the PPU to start receiving data for the chosen attribute table
+	ldy NAMETABLE_SELECTED
+	ldx ATTR_TABLE_BASE_PPU_ADDRESSES, Y
+	stx PPU_ADDR
+	ldx #ATTRIBUTE_TABLE_ADDR_LSB
+	stx PPU_ADDR
+
+	ldy #0
+
+attributeTableLoop:
+
+	lda (ATTR_DATA_ADDR), Y
+	sta PPU_DATA
+
+	; The attribute table is 64 ($ff) bytes long. Starting from a zero offset,
+	; then, we loop until $ff overflows back to 0. At that point, we'll have
+	; copied 64 bytes from system memory to the PPU.
+	iny
+	bne attributeTableLoop
+
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Sets up the color palettes stored at the specified 16-bit memory address.
 ;; Takes as input the palette location's address (LSB in X and MSB in Y.)
 ;; Palettes at this memory location should be a sequence of 16 bytes (each
 ;; group of 4 corresponds to palettes 0-3.)
-.proc setup_palettes
+.proc load_palettes
 
 	pha
 	txa

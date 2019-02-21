@@ -51,11 +51,114 @@ regs:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Loads a nametable into the PPU. Takes as input the nametable number (0-3) in
+;; A and the nametable data's 16-bit memory address (LSB in X and MSB in Y.)
+;; Note that for a serious project where saving space is important, you might
+;; want to replace this procedure with one that can load compressed data.
+.proc load_nametable
+
+	; ZP address containing an array (lookup table) of PPU nametable base
+	; addresses (for nametables 0-3)
+	NAMETABLE_BASE_PPU_ADDRESSES = $00
+
+	; ZP address containing 16-bit pointer to nametable data (little-endian)
+	NAMETABLE_DATA_ADDR = $04
+
+	; ZP address containing the selected nametable we want to load data into (0-3)
+	NAMETABLE_SELECTED = $06
+
+	sta NAMETABLE_SELECTED
+
+	pha
+	txa
+	pha
+	tya
+	pha
+
+	; Nametable data 16-bit address (little-endian)
+	stx NAMETABLE_DATA_ADDR
+	sty NAMETABLE_DATA_ADDR + 1
+
+	; Lookup table that we'll use to select the MSB of the starting PPU address
+	; for the selected nametable
+	ldx #NAMETABLE_0_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES
+	ldx #NAMETABLE_1_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 1
+	ldx #NAMETABLE_2_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 2
+	ldx #NAMETABLE_3_ADDR_MSB
+	stx NAMETABLE_BASE_PPU_ADDRESSES + 3
+
+	; Prime the PPU to start receiving data for the chosen nametable
+	ldy NAMETABLE_SELECTED
+	ldx NAMETABLE_BASE_PPU_ADDRESSES, Y
+	stx PPU_ADDR
+	ldx #NAMETABLE_ADDR_LSB
+	stx PPU_ADDR
+
+	; The nametable's data is 4 * 240($f0) = 960 bytes. This number is too large for
+	; a single 8-bit integer, so I'm doing a nested loop instead.
+
+	ldx #$4
+
+outerNametableLoadLoop:
+
+	cpx #0
+	beq endOuterNametableLoadLoop
+
+	ldy #$f0
+
+innerNametableLoadLoop:
+
+	cpy #0
+	beq endInnerNametableLoadLoop
+
+	; Send the next byte to the PPU
+	tya
+	pha
+	ldy #0
+	lda (NAMETABLE_DATA_ADDR), Y
+	sta PPU_DATA
+
+	inc NAMETABLE_DATA_ADDR
+
+	; If incrementing the LSB of the data pointer's 16-bit address results in an
+	; overflow, increment the MSB as well.
+	bne skipIncNametableDataAddr
+	inc NAMETABLE_DATA_ADDR + 1
+
+skipIncNametableDataAddr:
+
+	pla
+	tay
+	dey
+	jmp innerNametableLoadLoop
+
+endInnerNametableLoadLoop:
+
+	dex
+	jmp outerNametableLoadLoop
+
+endOuterNametableLoadLoop:
+
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+
+.endproc
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Sets up the color palettes stored at the specified 16-bit memory address.
 ;; Takes as input the palette location's address (LSB in X and MSB in Y.)
 ;; Palettes at this memory location should be a sequence of 16 bytes (each
 ;; group of 4 corresponds to palettes 0-3.)
-.proc setup_palettes
+.proc load_palettes
 
 	pha
 	txa

@@ -8,6 +8,16 @@ PALETTE_ADDR_MSB = $3f
 ; PPU address to set the universal background color is $3f00.
 PALETTE_UNIVERSAL_BG_ADDR_LSB = $00
 
+;;;;;;;;;;;;;;;;;;;;;
+;;; PPU Nametable ;;;
+;;;;;;;;;;;;;;;;;;;;;
+
+NAMETABLE_0_ADDR_MSB = $20
+NAMETABLE_1_ADDR_MSB = $24
+NAMETABLE_2_ADDR_MSB = $28
+NAMETABLE_3_ADDR_MSB = $2c
+NAMETABLE_ADDR_LSB = $00 ; LSB is the same for all nametables
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; PPU Attribute Table ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
